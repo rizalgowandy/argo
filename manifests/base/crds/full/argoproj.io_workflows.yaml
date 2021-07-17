@@ -379,6 +379,8 @@ spec:
                             depth:
                               format: int64
                               type: integer
+                            disableSubmodules:
+                              type: boolean
                             fetch:
                               items:
                                 type: string
@@ -884,6 +886,8 @@ spec:
                       maxDuration:
                         type: string
                     type: object
+                  expression:
+                    type: string
                   limit:
                     anyOf:
                     - type: integer
@@ -1311,6 +1315,8 @@ spec:
                           depth:
                             format: int64
                             type: integer
+                          disableSubmodules:
+                            type: boolean
                           fetch:
                             items:
                               type: string
@@ -2738,6 +2744,8 @@ spec:
                                           depth:
                                             format: int64
                                             type: integer
+                                          disableSubmodules:
+                                            type: boolean
                                           fetch:
                                             items:
                                               type: string
@@ -3106,6 +3114,8 @@ spec:
                                                 depth:
                                                   format: int64
                                                   type: integer
+                                                disableSubmodules:
+                                                  type: boolean
                                                 fetch:
                                                   items:
                                                     type: string
@@ -3515,6 +3525,8 @@ spec:
                                   depth:
                                     format: int64
                                     type: integer
+                                  disableSubmodules:
+                                    type: boolean
                                   fetch:
                                     items:
                                       type: string
@@ -3781,6 +3793,46 @@ spec:
                           type: string
                       type: object
                     type: array
+                  http:
+                    properties:
+                      body:
+                        format: byte
+                        type: string
+                      headers:
+                        items:
+                          properties:
+                            name:
+                              type: string
+                            value:
+                              type: string
+                            valueFrom:
+                              properties:
+                                secretKeyRef:
+                                  properties:
+                                    key:
+                                      type: string
+                                    name:
+                                      type: string
+                                    optional:
+                                      type: boolean
+                                  required:
+                                  - key
+                                  type: object
+                              type: object
+                          required:
+                          - name
+                          type: object
+                        type: array
+                      method:
+                        type: string
+                      timeoutSeconds:
+                        format: int64
+                        type: integer
+                      url:
+                        type: string
+                    required:
+                    - url
+                    type: object
                   initContainers:
                     items:
                       properties:
@@ -4407,6 +4459,8 @@ spec:
                                 depth:
                                   format: int64
                                   type: integer
+                                disableSubmodules:
+                                  type: boolean
                                 fetch:
                                   items:
                                     type: string
@@ -4863,6 +4917,8 @@ spec:
                                 depth:
                                   format: int64
                                   type: integer
+                                disableSubmodules:
+                                  type: boolean
                                 fetch:
                                   items:
                                     type: string
@@ -5191,6 +5247,8 @@ spec:
                           maxDuration:
                             type: string
                         type: object
+                      expression:
+                        type: string
                       limit:
                         anyOf:
                         - type: integer
@@ -7410,6 +7468,8 @@ spec:
                             depth:
                               format: int64
                               type: integer
+                            disableSubmodules:
+                              type: boolean
                             fetch:
                               items:
                                 type: string
@@ -8837,6 +8897,8 @@ spec:
                                             depth:
                                               format: int64
                                               type: integer
+                                            disableSubmodules:
+                                              type: boolean
                                             fetch:
                                               items:
                                                 type: string
@@ -9205,6 +9267,8 @@ spec:
                                                   depth:
                                                     format: int64
                                                     type: integer
+                                                  disableSubmodules:
+                                                    type: boolean
                                                   fetch:
                                                     items:
                                                       type: string
@@ -9614,6 +9678,8 @@ spec:
                                     depth:
                                       format: int64
                                       type: integer
+                                    disableSubmodules:
+                                      type: boolean
                                     fetch:
                                       items:
                                         type: string
@@ -9880,6 +9946,46 @@ spec:
                             type: string
                         type: object
                       type: array
+                    http:
+                      properties:
+                        body:
+                          format: byte
+                          type: string
+                        headers:
+                          items:
+                            properties:
+                              name:
+                                type: string
+                              value:
+                                type: string
+                              valueFrom:
+                                properties:
+                                  secretKeyRef:
+                                    properties:
+                                      key:
+                                        type: string
+                                      name:
+                                        type: string
+                                      optional:
+                                        type: boolean
+                                    required:
+                                    - key
+                                    type: object
+                                type: object
+                            required:
+                            - name
+                            type: object
+                          type: array
+                        method:
+                          type: string
+                        timeoutSeconds:
+                          format: int64
+                          type: integer
+                        url:
+                          type: string
+                      required:
+                      - url
+                      type: object
                     initContainers:
                       items:
                         properties:
@@ -10506,6 +10612,8 @@ spec:
                                   depth:
                                     format: int64
                                     type: integer
+                                  disableSubmodules:
+                                    type: boolean
                                   fetch:
                                     items:
                                       type: string
@@ -10962,6 +11070,8 @@ spec:
                                   depth:
                                     format: int64
                                     type: integer
+                                  disableSubmodules:
+                                    type: boolean
                                   fetch:
                                     items:
                                       type: string
@@ -11290,6 +11400,8 @@ spec:
                             maxDuration:
                               type: string
                           type: object
+                        expression:
+                          type: string
                         limit:
                           anyOf:
                           - type: integer
@@ -14016,6 +14128,198 @@ spec:
             properties:
               artifactRepositoryRef:
                 properties:
+                  artifactRepository:
+                    properties:
+                      archiveLogs:
+                        type: boolean
+                      artifactory:
+                        properties:
+                          passwordSecret:
+                            properties:
+                              key:
+                                type: string
+                              name:
+                                type: string
+                              optional:
+                                type: boolean
+                            required:
+                            - key
+                            type: object
+                          repoURL:
+                            type: string
+                          usernameSecret:
+                            properties:
+                              key:
+                                type: string
+                              name:
+                                type: string
+                              optional:
+                                type: boolean
+                            required:
+                            - key
+                            type: object
+                        type: object
+                      gcs:
+                        properties:
+                          bucket:
+                            type: string
+                          keyFormat:
+                            type: string
+                          serviceAccountKeySecret:
+                            properties:
+                              key:
+                                type: string
+                              name:
+                                type: string
+                              optional:
+                                type: boolean
+                            required:
+                            - key
+                            type: object
+                        type: object
+                      hdfs:
+                        properties:
+                          addresses:
+                            items:
+                              type: string
+                            type: array
+                          force:
+                            type: boolean
+                          hdfsUser:
+                            type: string
+                          krbCCacheSecret:
+                            properties:
+                              key:
+                                type: string
+                              name:
+                                type: string
+                              optional:
+                                type: boolean
+                            required:
+                            - key
+                            type: object
+                          krbConfigConfigMap:
+                            properties:
+                              key:
+                                type: string
+                              name:
+                                type: string
+                              optional:
+                                type: boolean
+                            required:
+                            - key
+                            type: object
+                          krbKeytabSecret:
+                            properties:
+                              key:
+                                type: string
+                              name:
+                                type: string
+                              optional:
+                                type: boolean
+                            required:
+                            - key
+                            type: object
+                          krbRealm:
+                            type: string
+                          krbServicePrincipalName:
+                            type: string
+                          krbUsername:
+                            type: string
+                          pathFormat:
+                            type: string
+                        type: object
+                      oss:
+                        properties:
+                          accessKeySecret:
+                            properties:
+                              key:
+                                type: string
+                              name:
+                                type: string
+                              optional:
+                                type: boolean
+                            required:
+                            - key
+                            type: object
+                          bucket:
+                            type: string
+                          createBucketIfNotPresent:
+                            type: boolean
+                          endpoint:
+                            type: string
+                          keyFormat:
+                            type: string
+                          lifecycleRule:
+                            properties:
+                              markDeletionAfterDays:
+                                format: int32
+                                type: integer
+                              markInfrequentAccessAfterDays:
+                                format: int32
+                                type: integer
+                            type: object
+                          secretKeySecret:
+                            properties:
+                              key:
+                                type: string
+                              name:
+                                type: string
+                              optional:
+                                type: boolean
+                            required:
+                            - key
+                            type: object
+                          securityToken:
+                            type: string
+                        type: object
+                      s3:
+                        properties:
+                          accessKeySecret:
+                            properties:
+                              key:
+                                type: string
+                              name:
+                                type: string
+                              optional:
+                                type: boolean
+                            required:
+                            - key
+                            type: object
+                          bucket:
+                            type: string
+                          createBucketIfNotPresent:
+                            properties:
+                              objectLocking:
+                                type: boolean
+                            type: object
+                          endpoint:
+                            type: string
+                          insecure:
+                            type: boolean
+                          keyFormat:
+                            type: string
+                          keyPrefix:
+                            type: string
+                          region:
+                            type: string
+                          roleARN:
+                            type: string
+                          secretKeySecret:
+                            properties:
+                              key:
+                                type: string
+                              name:
+                                type: string
+                              optional:
+                                type: boolean
+                            required:
+                            - key
+                            type: object
+                          useSDKCreds:
+                            type: boolean
+                        type: object
+                    type: object
                   configMap:
                     type: string
                   default:
@@ -14145,6 +14449,8 @@ spec:
                                   depth:
                                     format: int64
                                     type: integer
+                                  disableSubmodules:
+                                    type: boolean
                                   fetch:
                                     items:
                                       type: string
@@ -14518,6 +14824,8 @@ spec:
                                   depth:
                                     format: int64
                                     type: integer
+                                  disableSubmodules:
+                                    type: boolean
                                   fetch:
                                     items:
                                       type: string
@@ -14916,6 +15224,8 @@ spec:
                             depth:
                               format: int64
                               type: integer
+                            disableSubmodules:
+                              type: boolean
                             fetch:
                               items:
                                 type: string
@@ -16206,6 +16516,8 @@ spec:
                             depth:
                               format: int64
                               type: integer
+                            disableSubmodules:
+                              type: boolean
                             fetch:
                               items:
                                 type: string
@@ -17633,6 +17945,8 @@ spec:
                                             depth:
                                               format: int64
                                               type: integer
+                                            disableSubmodules:
+                                              type: boolean
                                             fetch:
                                               items:
                                                 type: string
@@ -18001,6 +18315,8 @@ spec:
                                                   depth:
                                                     format: int64
                                                     type: integer
+                                                  disableSubmodules:
+                                                    type: boolean
                                                   fetch:
                                                     items:
                                                       type: string
@@ -18410,6 +18726,8 @@ spec:
                                     depth:
                                       format: int64
                                       type: integer
+                                    disableSubmodules:
+                                      type: boolean
                                     fetch:
                                       items:
                                         type: string
@@ -18676,6 +18994,46 @@ spec:
                             type: string
                         type: object
                       type: array
+                    http:
+                      properties:
+                        body:
+                          format: byte
+                          type: string
+                        headers:
+                          items:
+                            properties:
+                              name:
+                                type: string
+                              value:
+                                type: string
+                              valueFrom:
+                                properties:
+                                  secretKeyRef:
+                                    properties:
+                                      key:
+                                        type: string
+                                      name:
+                                        type: string
+                                      optional:
+                                        type: boolean
+                                    required:
+                                    - key
+                                    type: object
+                                type: object
+                            required:
+                            - name
+                            type: object
+                          type: array
+                        method:
+                          type: string
+                        timeoutSeconds:
+                          format: int64
+                          type: integer
+                        url:
+                          type: string
+                      required:
+                      - url
+                      type: object
                     initContainers:
                       items:
                         properties:
@@ -19302,6 +19660,8 @@ spec:
                                   depth:
                                     format: int64
                                     type: integer
+                                  disableSubmodules:
+                                    type: boolean
                                   fetch:
                                     items:
                                       type: string
@@ -19758,6 +20118,8 @@ spec:
                                   depth:
                                     format: int64
                                     type: integer
+                                  disableSubmodules:
+                                    type: boolean
                                   fetch:
                                     items:
                                       type: string
@@ -20086,6 +20448,8 @@ spec:
                             maxDuration:
                               type: string
                           type: object
+                        expression:
+                          type: string
                         limit:
                           anyOf:
                           - type: integer
@@ -22323,6 +22687,8 @@ spec:
                                 depth:
                                   format: int64
                                   type: integer
+                                disableSubmodules:
+                                  type: boolean
                                 fetch:
                                   items:
                                     type: string
@@ -22828,6 +23194,8 @@ spec:
                           maxDuration:
                             type: string
                         type: object
+                      expression:
+                        type: string
                       limit:
                         anyOf:
                         - type: integer
@@ -23255,6 +23623,8 @@ spec:
                               depth:
                                 format: int64
                                 type: integer
+                              disableSubmodules:
+                                type: boolean
                               fetch:
                                 items:
                                   type: string
@@ -24682,6 +25052,8 @@ spec:
                                               depth:
                                                 format: int64
                                                 type: integer
+                                              disableSubmodules:
+                                                type: boolean
                                               fetch:
                                                 items:
                                                   type: string
@@ -25050,6 +25422,8 @@ spec:
                                                     depth:
                                                       format: int64
                                                       type: integer
+                                                    disableSubmodules:
+                                                      type: boolean
                                                     fetch:
                                                       items:
                                                         type: string
@@ -25459,6 +25833,8 @@ spec:
                                       depth:
                                         format: int64
                                         type: integer
+                                      disableSubmodules:
+                                        type: boolean
                                       fetch:
                                         items:
                                           type: string
@@ -25725,6 +26101,46 @@ spec:
                               type: string
                           type: object
                         type: array
+                      http:
+                        properties:
+                          body:
+                            format: byte
+                            type: string
+                          headers:
+                            items:
+                              properties:
+                                name:
+                                  type: string
+                                value:
+                                  type: string
+                                valueFrom:
+                                  properties:
+                                    secretKeyRef:
+                                      properties:
+                                        key:
+                                          type: string
+                                        name:
+                                          type: string
+                                        optional:
+                                          type: boolean
+                                      required:
+                                      - key
+                                      type: object
+                                  type: object
+                              required:
+                              - name
+                              type: object
+                            type: array
+                          method:
+                            type: string
+                          timeoutSeconds:
+                            format: int64
+                            type: integer
+                          url:
+                            type: string
+                        required:
+                        - url
+                        type: object
                       initContainers:
                         items:
                           properties:
@@ -26351,6 +26767,8 @@ spec:
                                     depth:
                                       format: int64
                                       type: integer
+                                    disableSubmodules:
+                                      type: boolean
                                     fetch:
                                       items:
                                         type: string
@@ -26807,6 +27225,8 @@ spec:
                                     depth:
                                       format: int64
                                       type: integer
+                                    disableSubmodules:
+                                      type: boolean
                                     fetch:
                                       items:
                                         type: string
@@ -27135,6 +27555,8 @@ spec:
                               maxDuration:
                                 type: string
                             type: object
+                          expression:
+                            type: string
                           limit:
                             anyOf:
                             - type: integer
@@ -29354,6 +29776,8 @@ spec:
                                 depth:
                                   format: int64
                                   type: integer
+                                disableSubmodules:
+                                  type: boolean
                                 fetch:
                                   items:
                                     type: string
@@ -30781,6 +31205,8 @@ spec:
                                                 depth:
                                                   format: int64
                                                   type: integer
+                                                disableSubmodules:
+                                                  type: boolean
                                                 fetch:
                                                   items:
                                                     type: string
@@ -31149,6 +31575,8 @@ spec:
                                                       depth:
                                                         format: int64
                                                         type: integer
+                                                      disableSubmodules:
+                                                        type: boolean
                                                       fetch:
                                                         items:
                                                           type: string
@@ -31558,6 +31986,8 @@ spec:
                                         depth:
                                           format: int64
                                           type: integer
+                                        disableSubmodules:
+                                          type: boolean
                                         fetch:
                                           items:
                                             type: string
@@ -31824,6 +32254,46 @@ spec:
                                 type: string
                             type: object
                           type: array
+                        http:
+                          properties:
+                            body:
+                              format: byte
+                              type: string
+                            headers:
+                              items:
+                                properties:
+                                  name:
+                                    type: string
+                                  value:
+                                    type: string
+                                  valueFrom:
+                                    properties:
+                                      secretKeyRef:
+                                        properties:
+                                          key:
+                                            type: string
+                                          name:
+                                            type: string
+                                          optional:
+                                            type: boolean
+                                        required:
+                                        - key
+                                        type: object
+                                    type: object
+                                required:
+                                - name
+                                type: object
+                              type: array
+                            method:
+                              type: string
+                            timeoutSeconds:
+                              format: int64
+                              type: integer
+                            url:
+                              type: string
+                          required:
+                          - url
+                          type: object
                         initContainers:
                           items:
                             properties:
@@ -32450,6 +32920,8 @@ spec:
                                       depth:
                                         format: int64
                                         type: integer
+                                      disableSubmodules:
+                                        type: boolean
                                       fetch:
                                         items:
                                           type: string
@@ -32906,6 +33378,8 @@ spec:
                                       depth:
                                         format: int64
                                         type: integer
+                                      disableSubmodules:
+                                        type: boolean
                                       fetch:
                                         items:
                                           type: string
@@ -33234,6 +33708,8 @@ spec:
                                 maxDuration:
                                   type: string
                               type: object
+                            expression:
+                              type: string
                             limit:
                               anyOf:
                               - type: integer

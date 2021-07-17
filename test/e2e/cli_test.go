@@ -3,6 +3,7 @@
 package e2e
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -10,6 +11,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"sigs.k8s.io/yaml"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -298,6 +301,14 @@ func (s *CLISuite) TestLogs() {
 				}
 			})
 	})
+	s.Run("Grep", func() {
+		s.Given().
+			RunCli([]string{"logs", name, "--grep=no"}, func(t *testing.T, output string, err error) {
+				if assert.NoError(t, err) {
+					assert.NotContains(t, output, ":) Hello Argo!")
+				}
+			})
+	})
 	s.Run("CompletedWorkflow", func() {
 		s.Given().
 			When().
@@ -309,6 +320,17 @@ func (s *CLISuite) TestLogs() {
 				}
 			})
 	})
+}
+
+func toLines(x string) []string {
+	var y []string
+	for _, s := range strings.Split(x, "\n") {
+		println("s=", s)
+		if s != "" && !strings.Contains(s, "argo=true") {
+			y = append(y, s)
+		}
+	}
+	return y
 }
 
 // this test probably should be in the ArgoServerSuite, but it's just much easier to write the test
@@ -323,8 +345,8 @@ func (s *CLISuite) TestLogProblems() {
 		// logs should come in order
 		RunCli([]string{"logs", "@latest", "--follow"}, func(t *testing.T, output string, err error) {
 			if assert.NoError(t, err) {
-				lines := strings.Split(output, "\n")
-				if assert.Len(t, lines, 6) {
+				lines := toLines(output)
+				if assert.Len(t, lines, 5) {
 					assert.Contains(t, lines[0], "one")
 					assert.Contains(t, lines[1], "two")
 					assert.Contains(t, lines[2], "three")
@@ -339,8 +361,8 @@ func (s *CLISuite) TestLogProblems() {
 		Then().
 		RunCli([]string{"logs", "@latest"}, func(t *testing.T, output string, err error) {
 			if assert.NoError(t, err) {
-				lines := strings.Split(output, "\n")
-				if assert.Len(t, lines, 6) {
+				lines := toLines(output)
+				if assert.Len(t, lines, 5) {
 					assert.Contains(t, lines[0], "one")
 					assert.Contains(t, lines[1], "two")
 					assert.Contains(t, lines[2], "three")
@@ -364,16 +386,54 @@ func (s *CLISuite) TestRoot() {
 		})
 	})
 	s.Run("List", func() {
-		s.Given().
-			RunCli([]string{"list"}, func(t *testing.T, output string, err error) {
-				if assert.NoError(t, err) {
-					assert.Contains(t, output, "NAME")
-					assert.Contains(t, output, "STATUS")
-					assert.Contains(t, output, "AGE")
-					assert.Contains(t, output, "DURATION")
-					assert.Contains(t, output, "PRIORITY")
-				}
-			})
+		s.Run("DefaultOutput", func() {
+			s.Given().
+				RunCli([]string{"list"}, func(t *testing.T, output string, err error) {
+					if assert.NoError(t, err) {
+						assert.Contains(t, output, "NAME")
+						assert.Contains(t, output, "STATUS")
+						assert.Contains(t, output, "AGE")
+						assert.Contains(t, output, "DURATION")
+						assert.Contains(t, output, "PRIORITY")
+					}
+				})
+		})
+		s.Run("NameOutput", func() {
+			s.Given().
+				RunCli([]string{"list", "-o", "name"}, func(t *testing.T, output string, err error) {
+					if assert.NoError(t, err) {
+						assert.NotContains(t, output, "NAME")
+					}
+				})
+		})
+		s.Run("WideOutput", func() {
+			s.Given().
+				RunCli([]string{"list", "-o", "wide"}, func(t *testing.T, output string, err error) {
+					if assert.NoError(t, err) {
+						assert.Contains(t, output, "PARAMETERS")
+					}
+				})
+		})
+		s.Run("JSONOutput", func() {
+			s.Given().
+				RunCli([]string{"list", "-o", "json"}, func(t *testing.T, output string, err error) {
+					if assert.NoError(t, err) {
+						list := wfv1.Workflows{}
+						assert.NoError(t, json.Unmarshal([]byte(output), &list))
+						assert.Len(t, list, 1)
+					}
+				})
+		})
+		s.Run("YAMLOutput", func() {
+			s.Given().
+				RunCli([]string{"list", "-o", "yaml"}, func(t *testing.T, output string, err error) {
+					if assert.NoError(t, err) {
+						list := wfv1.Workflows{}
+						assert.NoError(t, yaml.UnmarshalStrict([]byte(output), &list))
+						assert.Len(t, list, 1)
+					}
+				})
+		})
 	})
 	s.Run("Get", func() {
 		s.Given().RunCli([]string{"get", "@latest"}, func(t *testing.T, output string, err error) {

@@ -2,7 +2,11 @@
 
 ## What's New?
 
-Find out on [our blog](https://blog.argoproj.io).
+Find out on [our blog](https://blog.argoproj.io) and [changelog](https://github.com/argoproj/argo-workflows/blob/master/CHANGELOG.md).
+
+## Breaking Changes and Known Issues
+
+See [upgrading](https://github.com/argoproj/argo-workflows/blob/master/docs/upgrading.md).
 
 ## Argo CLI
 
@@ -12,7 +16,7 @@ Available via `curl`
 
 ```sh
 # Download the binary
-curl -sLO https://github.com/argoproj/argo/releases/download/${version}/argo-darwin-amd64.gz
+curl -sLO https://github.com/argoproj/argo-workflows/releases/download/${version}/argo-darwin-amd64.gz
 
 # Unzip
 gunzip argo-darwin-amd64.gz
@@ -33,7 +37,7 @@ Available via `curl`
 
 ```sh
 # Download the binary
-curl -sLO https://github.com/argoproj/argo/releases/download/${version}/argo-linux-amd64.gz
+curl -sLO https://github.com/argoproj/argo-workflows/releases/download/${version}/argo-linux-amd64.gz
 
 # Unzip
 gunzip argo-linux-amd64.gz

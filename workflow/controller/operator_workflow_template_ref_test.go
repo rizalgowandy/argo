@@ -369,3 +369,123 @@ func TestWorkflowTemplateRefWithShutdownAndSuspend(t *testing.T) {
 		}
 	})
 }
+
+var suspendwf = `apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  name: workflow-template-whalesay-template-z56dm
+  namespace: default
+spec:
+  arguments:
+    parameters:
+    - name: message
+      value: tt
+  entrypoint: whalesay-template
+  suspend: true
+  workflowTemplateRef:
+    name: workflow-template-whalesay-template
+status:
+  artifactRepositoryRef:
+    default: true
+  conditions:
+  - status: "False"
+    type: PodRunning
+  finishedAt: null
+  phase: Running
+  progress: 0/0
+  startedAt: "2021-05-13T22:56:17Z"
+  storedTemplates:
+    namespaced/workflow-template-whalesay-template/whalesay-template:
+      container:
+        args:
+        - sleep
+        command:
+        - cowsay
+        image: docker/whalesay
+        name: ""
+      name: whalesay-template
+  storedWorkflowTemplateSpec:
+    entrypoint: whalesay-template
+    suspend: true
+    templates:
+    - container:
+        args:
+        - sleep
+        command:
+        - cowsay
+        image: docker/whalesay
+        name: ""
+      name: whalesay-template
+    volumes:
+    - emptyDir: {}
+      name: data
+    workflowTemplateRef:
+      name: workflow-template-whalesay-template
+`
+
+func TestSuspendResumeWorkflowTemplateRef(t *testing.T) {
+	wf := wfv1.MustUnmarshalWorkflow(suspendwf)
+	cancel, controller := newController(wf, wfv1.MustUnmarshalWorkflowTemplate(wfTmpl))
+	defer cancel()
+	ctx := context.Background()
+	woc := newWorkflowOperationCtx(wf, controller)
+	woc.operate(ctx)
+	assert.True(t, *woc.wf.Status.StoredWorkflowSpec.Suspend)
+	woc.wf.Spec.Suspend = nil
+	woc = newWorkflowOperationCtx(woc.wf, controller)
+	woc.operate(ctx)
+	assert.Nil(t, woc.wf.Status.StoredWorkflowSpec.Suspend)
+}
+
+const wfTmplUpt = `
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: workflow-template-whalesay-template
+  namespace: default
+spec:
+  templates:
+  - name: hello-hello-hello
+    steps:
+    - - name: hello1
+        template: whalesay
+        arguments:
+          parameters: [{name: message, value: "hello1"}]
+    - - name: hello2a
+        template: whalesay
+        arguments:
+          parameters: [{name: message, value: "hello2a"}]
+      - name: hello2b
+        template: whalesay
+        arguments:
+          parameters: [{name: message, value: "hello2b"}]
+
+  - name: whalesay
+    inputs:
+      parameters:
+      - name: message
+    container:
+      image: docker/whalesay
+      command: [cowsay]
+      args: ["{{inputs.parameters.message}}"]
+`
+
+func TestWorkflowTemplateUpdateScenario(t *testing.T) {
+
+	wf := wfv1.MustUnmarshalWorkflow(wfWithTmplRef)
+	cancel, controller := newController(wf, wfv1.MustUnmarshalWorkflowTemplate(wfTmpl))
+	defer cancel()
+	ctx := context.Background()
+	woc := newWorkflowOperationCtx(wf, controller)
+	woc.operate(ctx)
+	assert.NotEmpty(t, woc.wf.Status.StoredWorkflowSpec)
+	assert.NotEmpty(t, woc.wf.Status.StoredWorkflowSpec.Templates[0].Container)
+
+	cancel, controller = newController(woc.wf, wfv1.MustUnmarshalWorkflowTemplate(wfTmplUpt))
+	defer cancel()
+	ctx = context.Background()
+	woc1 := newWorkflowOperationCtx(woc.wf, controller)
+	woc1.operate(ctx)
+	assert.NotEmpty(t, woc1.wf.Status.StoredWorkflowSpec)
+	assert.Equal(t, woc.wf.Status.StoredWorkflowSpec, woc1.wf.Status.StoredWorkflowSpec)
+}
